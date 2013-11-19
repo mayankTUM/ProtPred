@@ -1,0 +1,62 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
+//import org.jgrapht.*;
+
+
+public class Main {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) throws Exception
+	{
+		// TODO Auto-generated method stub
+		
+		// parsing the file.txt
+		List<String> ProteinList = new ArrayList<String>();
+		Parser parser = new Parser( );
+		ProteinList = parser.ParseSeqFile(args[0], args[1]);
+		
+		HPOParser hpoParse = new HPOParser();
+		
+		Iterator<String> it = ProteinList.iterator();
+		
+		String Prot;
+		System.out.println();
+		
+		// Graph Data structures
+		DirectedGraph<String, DefaultEdge > Graph1, Graph2;			
+		Graph1 = new SimpleDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+		
+		Prot = it.next();
+		Graph1 = hpoParse.parseHPO( Prot );
+		
+		while( it.hasNext() )
+		{
+			Prot = it.next();
+			Graphs.addGraph(Graph1, hpoParse.parseHPO( Prot ) );
+		}
+		
+//		// Graph Data structures
+//		DirectedGraph<String, DefaultEdge > Graph1, Graph2;			
+//		Graph1 = new SimpleDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+//		Graph2 = new SimpleDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+//		
+//		Prot = it.next();
+//		Graph2 =   hpoParse.parseHPO( "P01023" );
+//		Graph1 =   hpoParse1.parseHPO( "P01031" );
+//		Prot = it.next();
+//			
+//		Graphs.addGraph(Graph1, Graph2);
+		
+		System.out.println("Merged Graph");
+		System.out.println(Graph1.toString());
+	}
+
+}
